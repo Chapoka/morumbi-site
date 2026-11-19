@@ -62,12 +62,8 @@
   --surface-glass: 220 20% 10%;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border-color: hsl(var(--border));
-}
+/* Tailwind's own preflight (base layer) already resets margin/padding/border.
+   An unlayered reset here would override every utility (px-4, pt-16, ...). */
 
 body {
   background-color: hsl(var(--background));
@@ -133,17 +129,36 @@ h1, h2, h3, h4, h5, h6 {
   background-size: 30px 30px;
 }
 
+/* Tailwind v4 gives .container a max-width at every breakpoint; the original
+   Tailwind v3 site only capped it at 1400px. Neutralize the extra caps.
+   Padding comes from the px-4 utility used in every container in the app. */
 .container {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 2rem;
-  padding-left: 2rem;
+  max-width: none;
 }
 
 @media (min-width: 1400px) {
   .container {
     max-width: 1400px;
+  }
+}
+
+/* Tailwind v3 emitted responsive text-size utilities after leading-* classes,
+   so their built-in line-height won at those breakpoints. v4 routes every
+   line-height through --tw-leading, which would keep leading-tight forever.
+   Restore the original computed line-heights. */
+@media (width >= 40rem) {
+  .sm\:text-5xl {
+    line-height: 1;
+  }
+}
+
+@media (width >= 48rem) {
+  .md\:text-7xl {
+    line-height: 1;
+  }
+
+  .md\:text-3xl {
+    line-height: 2.25rem;
   }
 }
 
